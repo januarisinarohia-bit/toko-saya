@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pemesanan Baju Online</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #f7f7f7, #e8eaf6);
+    color: #222;
+}
+
+.container {
+    width: 95%;
+    max-width: 1000px;
+    margin: 30px auto;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.header {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.header p {
+    opacity: 0.9;
+}
+
+.form-area {
+    padding: 30px;
+}
+
+.section-title {
+    color: #5b21b6;
+    margin-bottom: 15px;
+    border-left: 5px solid #6a11cb;
+    padding-left: 10px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #6a11cb;
+    box-shadow: 0 0 5px rgba(106,17,203,0.2);
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.product-box {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.product {
+    border: 2px solid #eee;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.product:hover {
+    transform: translateY(-4px);
+    border-color: #6a11cb;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.product img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.product h3 {
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.price {
+    color: #6a11cb;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.product button {
+    background: #6a11cb;
+    color: white;
+    border: none;
+    padding: 9px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.product button:hover {
+    background: #4c1d95;
+}
+
+.button-area {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+}
+
+button {
+    border: none;
+    padding: 13px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.btn-process {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-cancel {
+    background: #dc2626;
+    color: white;
+}
+
+.btn-print {
+    background: #16a34a;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+}
+
+.result {
+    display: none;
+    margin-top: 30px;
+    padding: 25px;
+    border-radius: 15px;
+    background: #f8fafc;
+    border: 2px solid #ddd;
+}
+
+.result h2 {
+    color: #5b21b6;
+    margin-bottom: 15px;
+}
+
+.invoice {
+    line-height: 1.8;
+}
+
+.total {
+    font-size: 20px;
+    font-weight: bold;
+    color: #16a34a;
+    margin-top: 10px;
+}
+
+.status {
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 20px;
+    background: #dcfce7;
+    color: #166534;
+    font-weight: bold;
+}
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    background: #f3f4f6;
+    color: #555;
+}
+
+@media(max-width: 700px) {
+    .row {
+        grid-template-columns: 1fr;
+    }
+
+    .product-box {
+        grid-template-columns: 1fr;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+}
+
+@media print {
+    body {
+        background: white;
+    }
+
+    .container {
+        box-shadow: none;
+        width: 100%;
+    }
+
+    .form-area,
+    .footer,
+    .button-area {
+        display: none;
+    }
+
+    .result {
+        display: block !important;
+        border: none;
+    }
+
+    .header {
+        background: white;
+        color: black;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>👕 FASHION STYLE</h1>
+        <p>Sistem Pemesanan Baju Online</p>
+    </div>
+
+    <div class="form-area">
+
+        <h2 class="section-title">👤 Data Pelanggan</h2>
+
+        <div class="row">
+
+            <div class="form-group">
+                <label>Nama Pelanggan</label>
+                <input type="text" id="nama" placeholder="Masukkan nama lengkap">
+            </div>
+
+            <div class="form-group">
+                <label>No. HP</label>
+                <input type="tel" id="hp" placeholder="08xxxxxxxxxx">
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label>Alamat Pengiriman</label>
+            <textarea id="alamat" rows="3" placeholder="Masukkan alamat lengkap"></textarea>
+        </div>
+
+
+        <h2 class="section-title">👕 Pilihan Pemesanan</h2>
+
+        <div class="product-box">
+
+            <div class="product">
+                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500"
+                     alt="Kaos">
+                <h3>Kaos Casual</h3>
+                <p class="price">Rp75.000</p>
+                <button onclick="pilihProduk('Kaos Casual',75000)">
+                    Pilih
+                </button>
+            </div>
+
+            <div class="product">
+                <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500"
+                     alt="Kemeja">
+                <h3>Kemeja Pria</h3>
+                <p class="price">Rp125.000</p>
+                <button onclick="pilihProduk('Kemeja Pria',125000)">
+                    Pilih
+                </button>
+            </div>
+
+            <div class="product">
+                <img src="https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=500"
+                     alt="Hoodie">
+                <h3>Hoodie</h3>
+                <p class="price">Rp150.000</p>
+                <button onclick="pilihProduk('Hoodie',150000)">
+                    Pilih
+                </button>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="form-group">
+                <label>Produk Dipilih</label>
+                <input type="text" id="produk" readonly
+                       placeholder="Klik tombol Pilih">
+            </div>
+
+            <div class="form-group">
+                <label>Harga</label>
+                <input type="number" id="harga" readonly>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="form-group">
+                <label>Ukuran</label>
+                <select id="ukuran">
+                    <option value="">-- Pilih Ukuran --</option>
+                    <option>S</option>
+                    <option>M</option>
+                    <option>L</option>
+                    <option>XL</option>
+                    <option>XXL</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Jumlah</label>
+                <input type="number" id="jumlah" min="1" value="1">
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label>Metode Pembayaran</label>
+            <select id="pembayaran">
+                <option value="">-- Pilih Pembayaran --</option>
+                <option>Transfer Bank</option>
+                <option>QRIS</option>
+                <option>E-Wallet</option>
+                <option>COD</option>
+            </select>
+        </div>
+
+
+        <h2 class="section-title">⭐ Ulasan Pelanggan</h2>
+
+        <div class="form-group">
+            <label>Rating</label>
+            <select id="rating">
+                <option value="">-- Pilih Rating --</option>
+                <option>⭐</option>
+                <option>⭐⭐</option>
+                <option>⭐⭐⭐</option>
+                <option>⭐⭐⭐⭐</option>
+                <option>⭐⭐⭐⭐⭐</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Ulasan</label>
+            <textarea id="ulasan" rows="3"
+                      placeholder="Tulis ulasan Anda..."></textarea>
+        </div>
+
+
+        <div class="button-area">
+
+            <button class="btn-process" onclick="prosesTransaksi()">
+                ✅ Proses Transaksi
+            </button>
+
+            <button class="btn-cancel" onclick="batalTransaksi()">
+                ❌ Batal Transaksi / Refund
+            </button>
+
+            <button class="btn-print" onclick="cetakTransaksi()">
+                🖨️ Cetak Transaksi
+            </button>
+
+        </div>
+
+
+        <div class="result" id="hasil">
+
+            <h2>🧾 DETAIL TRANSAKSI</h2>
+
+            <div class="invoice">
+
+                <p><b>No. Transaksi:</b>
+                    <span id="noTransaksi"></span>
+                </p>
+
+                <p><b>Tanggal:</b>
+                    <span id="tanggal"></span>
+                </p>
+
+                <hr>
+
+                <p><b>Nama Pelanggan:</b>
+                    <span id="outNama"></span>
+                </p>
+
+                <p><b>No. HP:</b>
+                    <span id="outHp"></span>
+                </p>
+
+                <p><b>Alamat:</b>
+                    <span id="outAlamat"></span>
+                </p>
+
+                <hr>
+
+                <p><b>Produk:</b>
+                    <span id="outProduk"></span>
+                </p>
+
+                <p><b>Ukuran:</b>
+                    <span id="outUkuran"></span>
+                </p>
+
+                <p><b>Harga:</b>
+                    <span id="outHarga"></span>
+                </p>
+
+                <p><b>Jumlah:</b>
+                    <span id="outJumlah"></span>
+                </p>
+
+                <p><b>Total Harga:</b>
+                    <span id="outTotal"></span>
+                </p>
+
+                <p><b>Pembayaran:</b>
+                    <span id="outPembayaran"></span>
+                </p>
+
+                <p><b>Status:</b>
+                    <span class="status" id="outStatus">
+                        Berhasil
+                    </span>
+                </p>
+
+                <hr>
+
+                <p><b>Rating:</b>
+                    <span id="outRating"></span>
+                </p>
+
+                <p><b>Ulasan:</b>
+                    <span id="outUlasan"></span>
+                </p>
+
+                <p class="total">
+                    Total Bayar: <span id="totalBayar"></span>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        © 2026 Fashion Style | Sistem Pemesanan Baju Online
+    </div>
+
+</div>
+
+
+<script>
+
+let hargaProduk = 0;
+
+function pilihProduk(namaProduk, harga) {
+
+    document.getElementById("produk").value = namaProduk;
+    document.getElementById("harga").value = harga;
+
+    hargaProduk = harga;
+
+}
+
+function formatRupiah(angka) {
+
+    return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0
+    }).format(angka);
+
+}
+
+
+function prosesTransaksi() {
+
+    let nama = document.getElementById("nama").value;
+    let hp = document.getElementById("hp").value;
+    let alamat = document.getElementById("alamat").value;
+    let produk = document.getElementById("produk").value;
+    let ukuran = document.getElementById("ukuran").value;
+    let jumlah = document.getElementById("jumlah").value;
+    let pembayaran = document.getElementById("pembayaran").value;
+    let rating = document.getElementById("rating").value;
+    let ulasan = document.getElementById("ulasan").value;
+
+    if (
+        nama === "" ||
+        hp === "" ||
+        alamat === "" ||
+        produk === "" ||
+        ukuran === "" ||
+        jumlah === "" ||
+        pembayaran === ""
+    ) {
+
+        alert("⚠️ Silakan lengkapi semua data terlebih dahulu!");
+
+        return;
+    }
+
+    let total = hargaProduk * parseInt(jumlah);
+
+    let nomor =
+        "FS-" +
+        Math.floor(100000 + Math.random() * 900000);
+
+    let tanggal = new Date().toLocaleString("id-ID");
+
+    document.getElementById("noTransaksi").innerText = nomor;
+    document.getElementById("tanggal").innerText = tanggal;
+
+    document.getElementById("outNama").innerText = nama;
+    document.getElementById("outHp").innerText = hp;
+    document.getElementById("outAlamat").innerText = alamat;
+
+    document.getElementById("outProduk").innerText = produk;
+    document.getElementById("outUkuran").innerText = ukuran;
+    document.getElementById("outHarga").innerText =
+        formatRupiah(hargaProduk);
+
+    document.getElementById("outJumlah").innerText = jumlah;
+
+    document.getElementById("outTotal").innerText =
+        formatRupiah(total);
+
+    document.getElementById("outPembayaran").innerText =
+        pembayaran;
+
+    document.getElementById("outRating").innerText =
+        rating || "-";
+
+    document.getElementById("outUlasan").innerText =
+        ulasan || "-";
+
+    document.getElementById("totalBayar").innerText =
+        formatRupiah(total);
+
+    document.getElementById("outStatus").innerText =
+        "Berhasil";
+
+    document.getElementById("outStatus").style.background =
+        "#dcfce7";
+
+    document.getElementById("outStatus").style.color =
+        "#166534";
+
+    document.getElementById("hasil").style.display =
+        "block";
+
+    document.getElementById("hasil").scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
+
+
+function batalTransaksi() {
+
+    let konfirmasi = confirm(
+        "Apakah Anda yakin ingin membatalkan transaksi dan mengajukan refund?"
+    );
+
+    if (!konfirmasi) {
+        return;
+    }
+
+    let hasil = document.getElementById("hasil");
+
+    hasil.style.display = "block";
+
+    document.getElementById("noTransaksi").innerText =
+        "-";
+
+    document.getElementById("tanggal").innerText =
+        new Date().toLocaleString("id-ID");
+
+    document.getElementById("outNama").innerText =
+        document.getElementById("nama").value || "-";
+
+    document.getElementById("outHp").innerText =
+        document.getElementById("hp").value || "-";
+
+    document.getElementById("outAlamat").innerText =
+        document.getElementById("alamat").value || "-";
+
+    document.getElementById("outProduk").innerText =
+        document.getElementById("produk").value || "-";
+
+    document.getElementById("outUkuran").innerText =
+        document.getElementById("ukuran").value || "-";
+
+    document.getElementById("outHarga").innerText =
+        "-";
+
+    document.getElementById("outJumlah").innerText =
+        "-";
+
+    document.getElementById("outTotal").innerText =
+        "-";
+
+    document.getElementById("outPembayaran").innerText =
+        document.getElementById("pembayaran").value || "-";
+
+    document.getElementById("outRating").innerText =
+        "-";
+
+    document.getElementById("outUlasan").innerText =
+        "Transaksi dibatalkan. Refund diajukan.";
+
+    document.getElementById("totalBayar").innerText =
+        "-";
+
+    let status = document.getElementById("outStatus");
+
+    status.innerText = "DIBATALKAN / REFUND";
+
+    status.style.background = "#fee2e2";
+    status.style.color = "#991b1b";
+
+    hasil.scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
+
+
+function cetakTransaksi() {
+
+    let hasil =
+        document.getElementById("hasil");
+
+    if (hasil.style.display === "none" ||
+        hasil.style.display === "") {
+
+        alert(
+            "⚠️ Silakan proses transaksi terlebih dahulu!"
+        );
+
+        return;
+    }
+
+    window.print();
+
+}
+
+</script>
+
+</body>
+</html>
